@@ -1,0 +1,17 @@
+# Node
+node_modules/
+npm-debug.log*
+yarn.lock
+
+# Env files
+.env
+.env.local
+
+# Builds
+dist/
+build/
+.next/
+
+# OS
+.DS_Store
+Thumbs.db
