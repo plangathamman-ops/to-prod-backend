@@ -3,9 +3,9 @@ const path = require('path');
 dotenv.config({ path: path.resolve(__dirname, '../../.env') });
 
 module.exports = {
-  port: process.env.PORT || 5000,
+  port: process.env.PORT || 8080,
   mongoUri: process.env.MONGO_URI || 'mongodb+srv://appuser:Hamp9map@opportunityhub.ose8qtj.mongodb.net/?appName=OpportunityHub',
-  jwtSecret: process.env.JWT_SECRET || 'your-secret-key-change-in-production',
+  jwtSecret: process.env.JWT_SECRET || '3e43a009947615e66cd5113a64f9851ff85bb6b1aa0ec9628d177521f4215490',
   jwtExpire: process.env.JWT_EXPIRE || '7d',
   
   // M-Pesa/Payment Configuration
