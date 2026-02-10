@@ -7,7 +7,10 @@ COPY backend/package*.json ./
 RUN npm install --production
 
 COPY backend/ .
+COPY backend/.env .
 
 EXPOSE 8080
+
+CMD ["npm", "start"]
 
 CMD ["npm", "start"]
