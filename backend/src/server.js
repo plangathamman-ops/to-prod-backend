@@ -17,6 +17,17 @@ const app = express();
 // Trust proxy - needed for rate limiting behind proxies (Railway, Heroku, etc.)
 app.set('trust proxy', 1);
 
+// Global error handler for uncaught exceptions
+process.on('uncaughtException', (err) => {
+  console.error('Uncaught Exception:', err);
+  process.exit(1);
+});
+
+// Global error handler for unhandled rejections
+process.on('unhandledRejection', (err) => {
+  console.error('Unhandled Rejection:', err);
+});
+
 // Connect to MongoDB
 mongoose
   .connect(config.mongoUri)
@@ -35,7 +46,13 @@ app.use(express.urlencoded({ extended: true }));
 // Rate limiting
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100 // limit each IP to 100 requests per windowMs
+  max: 100, // limit each IP to 100 requests per windowMs
+  standardHeaders: false,
+  legacyHeaders: false,
+  skip: (req) => {
+    // Skip rate limiting for health checks
+    return req.path === '/health' || req.path === '/';
+  }
 });
 app.use('/api/', limiter);
 
@@ -57,10 +74,22 @@ app.get('/', (req, res) => {
 });
 
 // API Routes
-app.use('/api/auth', authRoutes);
-app.use('/api/opportunities', opportunityRoutes);
-app.use('/api/applications', applicationRoutes);
-app.use('/api/upload', uploadRoutes);
+try {
+  app.use('/api/auth', authRoutes);
+  console.log('✓ Auth routes loaded');
+  
+  app.use('/api/opportunities', opportunityRoutes);
+  console.log('✓ Opportunities routes loaded');
+  
+  app.use('/api/applications', applicationRoutes);
+  console.log('✓ Applications routes loaded');
+  
+  app.use('/api/upload', uploadRoutes);
+  console.log('✓ Upload routes loaded');
+} catch (err) {
+  console.error('Error loading routes:', err);
+  process.exit(1);
+}
 
 // Error handling middleware
 app.use((err, req, res, next) => {
@@ -85,7 +114,9 @@ const PORT = config.port || 8080;
 const HOST = '0.0.0.0';
 
 const server = app.listen(PORT, HOST, () => {
-  console.log(`Server running in ${config.nodeEnv} mode on ${HOST}:${PORT}`);
+  console.log('\n═══════════════════════════════════════════════════════════');
+  console.log(`🚀 Server running in ${config.nodeEnv} mode on ${HOST}:${PORT}`);
+  console.log('═══════════════════════════════════════════════════════════\n');
 });
 
 // Handle graceful shutdown
