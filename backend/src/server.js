@@ -45,6 +45,14 @@ app.get('/health', (req, res) => {
   });
 });
 
+// Root route
+app.get('/', (req, res) => {
+  res.status(200).json({
+    success: true,
+    message: 'The app is live'
+  });
+});
+
 // API Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/opportunities', opportunityRoutes);
