@@ -14,6 +14,9 @@ const uploadRoutes = require('./routes/upload');
 // Initialize express app
 const app = express();
 
+// Trust proxy - needed for rate limiting behind proxies (Railway, Heroku, etc.)
+app.set('trust proxy', 1);
+
 // Connect to MongoDB
 mongoose
   .connect(config.mongoUri)
