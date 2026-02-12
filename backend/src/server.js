@@ -5,6 +5,10 @@ const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 const config = require('./config/config');
 
+// Initialize Firebase Admin SDK early
+const admin = require('./config/firebase');
+console.log('✓ Firebase module required');
+
 // Import routes
 const authRoutes = require('./routes/auth');
 const opportunityRoutes = require('./routes/opportunities');
