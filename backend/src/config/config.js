@@ -7,6 +7,7 @@ module.exports = {
   mongoUri: process.env.MONGO_URI || 'mongodb+srv://appuser:Hamp9map@opportunityhub.ose8qtj.mongodb.net/?appName=OpportunityHub',
   jwtSecret: process.env.JWT_SECRET || '3e43a009947615e66cd5113a64f9851ff85bb6b1aa0ec9628d177521f4215490',
   jwtExpire: process.env.JWT_EXPIRE || '7d',
+  corsOrigin: process.env.CORS_ORIGIN || 'https://app.hamanmatage.com',
   
   // M-Pesa/Payment Configuration
   mpesa: {

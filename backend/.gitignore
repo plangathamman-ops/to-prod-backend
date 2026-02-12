@@ -12,3 +12,6 @@ build/
 # OS
 .DS_Store
 Thumbs.db
+
+# Firebase service account (do not commit)
+src/config/serviceAccountKey.json

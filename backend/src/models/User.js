@@ -12,9 +12,15 @@ const userSchema = new mongoose.Schema({
   },
   password: {
     type: String,
-    required: [true, 'Password is required'],
+    required: false, // Optional for Firebase users
     minlength: 6,
     select: false
+  },
+  firebaseUid: {
+    type: String,
+    unique: true,
+    sparse: true, // Allows null values for non-Firebase users
+    index: true
   },
   firstName: {
     type: String,
@@ -52,13 +58,19 @@ const userSchema = new mongoose.Schema({
   timestamps: true
 });
 
-// Hash password before saving
+// Hash password before saving (only if password is modified)
 userSchema.pre('save', async function(next) {
+  // If user is Firebase-only, skip password hashing
+  if (this.firebaseUid && !this.password) {
+    return next();
+  }
+
   if (!this.isModified('password')) {
     next();
+  } else {
+    const salt = await bcrypt.genSalt(10);
+    this.password = await bcrypt.hash(this.password, salt);
   }
-  const salt = await bcrypt.genSalt(10);
-  this.password = await bcrypt.hash(this.password, salt);
 });
 
 // Compare password method
