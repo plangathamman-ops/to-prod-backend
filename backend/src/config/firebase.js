@@ -42,4 +42,3 @@ if (!admin.apps.length) {
 
 module.exports = admin;
 
-module.exports = firebaseApp;
